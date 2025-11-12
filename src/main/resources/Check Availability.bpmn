@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="Defs_RetrieveProducts" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.35.0">
+  <bpmn:process id="retrieve-products" name="Retrieve products" isExecutable="true">
+    <bpmn:startEvent id="sub_start" name="Products requested">
+      <bpmn:outgoing>sf1</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:serviceTask id="checkAvailability" name="Check availability" camunda:delegateExpression="${checkAvailabilityDelegate}">
+      <bpmn:incoming>sf1</bpmn:incoming>
+      <bpmn:outgoing>sf2</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:endEvent id="sub_end" name="Done">
+      <bpmn:incoming>sf2</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="sf1" sourceRef="sub_start" targetRef="checkAvailability" />
+    <bpmn:sequenceFlow id="sf2" sourceRef="checkAvailability" targetRef="sub_end" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="Diagram_Sub">
+    <bpmndi:BPMNPlane id="Plane_Sub" bpmnElement="retrieve-products">
+      <bpmndi:BPMNShape id="sub_start_di" bpmnElement="sub_start">
+        <dc:Bounds x="160" y="100" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="154" y="136" width="49" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="sub_task_di" bpmnElement="checkAvailability">
+        <dc:Bounds x="240" y="80" width="160" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="sub_end_di" bpmnElement="sub_end">
+        <dc:Bounds x="692" y="82" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="697" y="118" width="27" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="sf1_di" bpmnElement="sf1">
+        <di:waypoint x="196" y="118" />
+        <di:waypoint x="240" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="sf2_di" bpmnElement="sf2">
+        <di:waypoint x="400" y="124" />
+        <di:waypoint x="546" y="124" />
+        <di:waypoint x="546" y="99" />
+        <di:waypoint x="692" y="99" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
+http://maven.apache.org/xsd/maven-4.0.0.xsd">
+ 
+    <modelVersion>4.0.0</modelVersion>
+ 
+    <groupId>com.example</groupId>
+<artifactId>camunda7-postgres-demo</artifactId>
+<version>1.0.0</version>
+<packaging>jar</packaging>
+ 
+    <name>Camunda7 PostgreSQL Demo</name>
+ 
+    <properties>
+<java.version>17</java.version>
+<spring-boot.version>2.7.18</spring-boot.version>
+<camunda.version>7.19.0</camunda.version>
+<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+</properties>
+ 
+    <!-- Dependency Management -->
+<dependencyManagement>
+<dependencies>
+<dependency>
+<groupId>org.springframework.boot</groupId>
+<artifactId>spring-boot-dependencies</artifactId>
+<version>${spring-boot.version}</version>
+<type>pom</type>
+<scope>import</scope>
+</dependency>
+</dependencies>
+</dependencyManagement>
+ 
+    <dependencies>
+<!-- Camunda 7 Webapp -->
+    <dependency>
+      <groupId>io.camunda</groupId>
+      <artifactId>spring-boot-starter-camunda-sdk</artifactId>
+      <version>8.8.0-alpha4.1</version>
+    </dependency>
+<dependency>
+<groupId>org.camunda.bpm.springboot</groupId>
+<artifactId>camunda-bpm-spring-boot-starter-webapp</artifactId>
+<version>${camunda.version}</version>
+</dependency>
+ 
+        <!-- Camunda 7 REST API -->
+<dependency>
+<groupId>org.camunda.bpm.springboot</groupId>
+<artifactId>camunda-bpm-spring-boot-starter-rest</artifactId>
+<version>${camunda.version}</version>
+</dependency>
+ 
+        <!-- Spring Boot Web -->
+<dependency>
+<groupId>org.springframework.boot</groupId>
+<artifactId>spring-boot-starter-web</artifactId>
+</dependency>
+ 
+        <!-- Spring Data JPA -->
+<dependency>
+<groupId>org.springframework.boot</groupId>
+<artifactId>spring-boot-starter-data-jpa</artifactId>
+</dependency>
+ 
+        <!-- PostgreSQL JDBC Driver -->
+<dependency>
+<groupId>org.postgresql</groupId>
+<artifactId>postgresql</artifactId>
+</dependency>
+ 
+        <!-- Lombok -->
+<dependency>
+<groupId>org.projectlombok</groupId>
+<artifactId>lombok</artifactId>
+<optional>true</optional>
+</dependency>
+ 
+        <!-- Spring Boot Test -->
+<dependency>
+<groupId>org.springframework.boot</groupId>
+<artifactId>spring-boot-starter-test</artifactId>
+<scope>test</scope>
+</dependency>
+</dependencies>
+ 
+    <build>
+<plugins>
+<!-- Java Compiler -->
+<plugin>
+<groupId>org.apache.maven.plugins</groupId>
+<artifactId>maven-compiler-plugin</artifactId>
+<version>3.11.0</version>
+<configuration>
+<source>${java.version}</source>
+<target>${java.version}</target>
+<encoding>UTF-8</encoding>
+</configuration>
+</plugin>
+ 
+            <!-- Spring Boot Maven Plugin -->
+<plugin>
+<groupId>org.springframework.boot</groupId>
+<artifactId>spring-boot-maven-plugin</artifactId>
+<version>${spring-boot.version}</version>
+</plugin>
+ 
+            <!-- Skip tests during build -->
+<plugin>
+<groupId>org.apache.maven.plugins</groupId>
+<artifactId>maven-surefire-plugin</artifactId>
+<version>3.0.0</version>
+<configuration>
+<skipTests>true</skipTests>
+</configuration>
+</plugin>
+ 
+            <!-- OpenRewrite Migration Plugin -->
+<plugin>
+<groupId>org.openrewrite.maven</groupId>
+<artifactId>rewrite-maven-plugin</artifactId>
+<version>6.0.5</version>
+<configuration>
+<activeRecipes>
+<recipe>org.camunda.migration.rewrite.recipes.AllClientRecipes</recipe>
+<recipe>org.camunda.migration.rewrite.recipes.AllDelegateRecipes</recipe>
+</activeRecipes>
+<exclusions>
+<!-- Exclude problematic controller to avoid NPE in recipe -->
+<exclusion>**/OrderController.java</exclusion>
+</exclusions>
+<skipMavenParsing>false</skipMavenParsing>
+</configuration>
+<dependencies>
+<dependency>
+<groupId>org.camunda.community</groupId>
+<artifactId>camunda-7-to-8-rewrite-recipes</artifactId>
+<version>0.0.2</version>
+</dependency>
+</dependencies>
+</plugin>
+</plugins>
+</build>
+ 
+    <!-- Repositories for project dependencies -->
+<repositories>
+<repository>
+<id>camunda-public</id>
+<name>Camunda Public Repository</name>
+<url>https://artifacts.camunda.com/artifactory/public/</url>
+</repository>
+</repositories>
+ 
+    <!-- Plugin repositories for plugin dependencies (CRITICAL!) -->
+<pluginRepositories>
+<pluginRepository>
+<id>camunda-public</id>
+<name>Camunda Public Repository</name>
+<url>https://artifacts.camunda.com/artifactory/public/</url>
+<releases>
+<enabled>true</enabled>
+</releases>
+<snapshots>
+<enabled>false</enabled>
+</snapshots>
+</pluginRepository>
+</pluginRepositories>
+ 
+</project>
+ 
